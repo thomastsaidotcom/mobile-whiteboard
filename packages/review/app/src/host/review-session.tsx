@@ -19,11 +19,15 @@ import {
 import { type ReviewSurface, createReviewSurface } from "./review-host";
 import type { ReviewSessionData } from "./review-session-data";
 
+export type ReviewRendererBridge = Omit<ReviewCanvasBridge, "config"> & {
+  config: Omit<ReviewRuntimeConfig, "host">;
+};
+
 export interface ReviewSession {
   review?: ReviewSessionData;
   appSessionId: string;
-  bridge: ReviewCanvasBridge;
-  config: ReviewRuntimeConfig;
+  bridge: ReviewRendererBridge;
+  config: Omit<ReviewRuntimeConfig, "host">;
   surface: ReviewSurface;
   softwareMapData?(
     model: NormalizedSoftwareModel,
