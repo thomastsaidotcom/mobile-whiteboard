@@ -210,7 +210,9 @@ export function createMobileSession(
     bridge,
     review: {
       pins: snapshot.pins,
-      targetKind: snapshot.target?.kind,
+      // Project documents have no commit target for the older renderer chrome.
+      targetKind:
+        snapshot.target?.kind === "project" ? undefined : snapshot.target?.kind,
       historicalRevision: null,
       updatedAtMs: Date.parse(snapshot.createdAt),
       traces: new Map(),

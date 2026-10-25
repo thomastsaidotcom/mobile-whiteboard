@@ -21,7 +21,15 @@ export const summarySchema = z.object({
   version: versionSchema,
   createdAt: z.iso.datetime({ offset: true }),
   pins: pins.optional(),
-  target: reviewTargetSchema.optional(),
+  target: z
+    .union([
+      reviewTargetSchema,
+      z.strictObject({
+        kind: z.literal("project"),
+        repositoryId: z.string().trim().min(1),
+      }),
+    ])
+    .optional(),
 });
 
 export const snapshotSchema = summarySchema.extend({

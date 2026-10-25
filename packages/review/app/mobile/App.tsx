@@ -467,7 +467,13 @@ function Document({ snapshot }: { snapshot: ReviewSnapshot }) {
 
   const data = useQuery({
     queryKey: ["document", snapshot.reviewId, snapshot],
-    queryFn: () => loader.load(snapshot),
+    queryFn: () =>
+      loader.load({
+        ...snapshot,
+        // The older renderer only uses commit targets; project content needs none.
+        target:
+          snapshot.target?.kind === "project" ? undefined : snapshot.target,
+      }),
     // The loader revokes its blob URLs when this reader unmounts.
     gcTime: 0,
   });
