@@ -169,6 +169,30 @@ it("keeps all thirteen fixture kinds in order, with honest partial notices and d
   expect(html).toContain('href="#source-');
 });
 
+it("visibly identifies partially rendered blocks, including nested Markdown", async () => {
+  const html = await exportReviewHtml(
+    service({
+      ...saved,
+      document: [
+        ...saved.document,
+        {
+          type: "section",
+          title: "Details",
+          children: [{ id: "math<block>", type: "markdown", markdown: "$x$" }],
+        },
+      ],
+    }),
+    "example",
+  );
+
+  const visible = html.replace(/<[^>]*>/g, "");
+  expect(visible).toContain("Partial/unavailable: code_peek · block peek");
+  expect(visible).toContain(
+    "Partial/unavailable: markdown · block math&lt;block&gt;",
+  );
+  expect(html).not.toContain("block math<block>");
+});
+
 it("rejects moving target identities before reading pinned content", async () => {
   await expect(
     exportReviewHtml(

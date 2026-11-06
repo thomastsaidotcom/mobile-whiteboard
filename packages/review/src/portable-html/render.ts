@@ -188,7 +188,7 @@ export function renderReview({
         break;
       case "trace_quote":
         partial.add(block);
-        content = `<p class="notice">Unverified authored quote · trace_quote · ${escape(block.id ?? "")} · trace ${escape(block.traceId)} · event ${escape(block.eventId)}</p><blockquote>${escape(block.text)}</blockquote>`;
+        content = `<p class="notice">Unverified authored quote · trace ${escape(block.traceId)} · event ${escape(block.eventId)}</p><blockquote>${escape(block.text)}</blockquote>`;
         break;
       case "flow_diagram": {
         const ids = new Map(
@@ -212,11 +212,15 @@ export function renderReview({
               ? `${block.mapVersionId} · focus ${block.focusElementId ?? "none"}`
               : block.title;
 
-        content = `<p class="notice">Unavailable in M1: ${escape(block.type)} · block ${escape(block.id ?? "(unnamed)")} · ${escape(resource)}</p>`;
+        content = `<p class="notice">Unavailable in M1: ${escape(resource)}</p>`;
       }
     }
 
-    return `<section data-block-type="${block.type}">${content}</section>`;
+    const identity = partial.has(block)
+      ? `<p class="notice">Partial/unavailable: ${escape(block.type)} · block ${escape(block.id ?? "(unnamed)")}</p>`
+      : "";
+
+    return `<section data-block-type="${block.type}">${identity}${content}</section>`;
   };
 
   const body = snapshot.document.map(render).join("");
