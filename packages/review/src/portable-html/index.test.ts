@@ -202,6 +202,37 @@ it("rejects moving target identities before reading pinned content", async () =>
   ).rejects.toThrow(/immutable|target/i);
 });
 
+it("rejects mismatched base pins when a commits target omits its base", async () => {
+  await expect(
+    exportReviewHtml(
+      service({
+        ...saved,
+        target: { kind: "commits", repositoryId: "repo", head: pins.head },
+      }),
+      "example",
+    ),
+  ).rejects.toThrow(/target commits.*frozen pins/i);
+});
+
+it("preserves each repeated authored source link once", async () => {
+  const html = await exportReviewHtml(
+    service({
+      ...saved,
+      document: [
+        {
+          type: "markdown",
+          markdown:
+            "[First](review-source:head/order.ts#L2) and [Second](review-source:head/order.ts#L2)",
+        },
+      ],
+    }),
+    "example",
+  );
+
+  expect(html.match(/>First<\/a>/g)).toHaveLength(1);
+  expect(html.match(/>Second<\/a>/g)).toHaveLength(1);
+});
+
 it.each([
   ["unknown kind", { ...saved, document: [{ type: "mystery" }] }],
   [

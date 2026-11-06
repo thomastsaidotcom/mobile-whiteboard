@@ -133,12 +133,16 @@ export function renderReview({
         const url = node.url ?? "";
 
         if (/^review-source:/i.test(url)) {
-          const refs = sources.filter(
-            (source) =>
-              source.owner === owner && source.id === `${owner.id}:${url}`,
+          const refs = new Map(
+            sources
+              .filter(
+                (source) =>
+                  source.owner === owner && source.id === `${owner.id}:${url}`,
+              )
+              .map((source) => [source.source.side, source]),
           );
 
-          return refs
+          return [...refs.values()]
             .map((source) => `<a href="#${sourceId(source)}">${children()}</a>`)
             .join(" · ");
         }

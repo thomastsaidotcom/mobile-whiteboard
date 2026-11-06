@@ -108,8 +108,7 @@ export async function collectReview(
 
     if (
       snapshot.target.head !== snapshot.pins?.head ||
-      (snapshot.target.base !== undefined &&
-        snapshot.target.base !== snapshot.pins?.base)
+      (snapshot.target.base ?? snapshot.target.head) !== snapshot.pins?.base
     )
       throw new Error("Review target commits do not match frozen pins.");
   }
