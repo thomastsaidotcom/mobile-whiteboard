@@ -10,7 +10,8 @@
   },
   "bin": {
     "review": "./dist/cli.js",
-    "whiteboard": "./dist/cli.js"
+    "whiteboard": "./dist/cli.js",
+    "whiteboard-html": "./dist/portable-html/cli.js"
   },
   "files": [
     "LICENSE",
@@ -33,6 +34,10 @@
     "./sharing": {
       "types": "./dist/sharing/index.d.ts",
       "import": "./dist/sharing/index.js"
+    },
+    "./portable-html": {
+      "types": "./dist/portable-html/index.d.ts",
+      "import": "./dist/portable-html/index.js"
     }
   },
   "publishConfig": {

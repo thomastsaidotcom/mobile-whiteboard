@@ -74,7 +74,18 @@ export const readQuerySchemas = {
     side,
     file: z.string().min(1),
   }),
-  diff: z.strictObject({ version, commit, ...anchor }),
+  diff: z
+    .strictObject({
+      version,
+      commit,
+      ...anchor,
+      file: z.string().min(1).optional(),
+      previousPath: z.string().min(1).optional(),
+    })
+    .refine(
+      (input) => !input.previousPath || input.file !== undefined,
+      "previousPath requires file.",
+    ),
   structuralDiff: z.strictObject({
     version,
     commit,
