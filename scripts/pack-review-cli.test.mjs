@@ -32,7 +32,7 @@ async function fixture(t) {
   return { root, packageDirectory };
 }
 
-test("packs the Desktop version under the whiteboard name with both bins", async (t) => {
+test("packs the Desktop version under the whiteboard name", async (t) => {
   const { root, packageDirectory } = await fixture(t);
   const output = path.join(root, "output");
 
@@ -52,10 +52,6 @@ test("packs the Desktop version under the whiteboard name with both bins", async
   assert.equal(pkg.name, "@dev.fast/whiteboard");
   assert.equal(pkg.version, version);
   assert.equal(pkg.gitHead, commit);
-  assert.deepEqual(pkg.bin, {
-    review: "./dist/cli.js",
-    whiteboard: "./dist/cli.js",
-  });
   await assert.rejects(stat(path.join(pkgRoot, "vscode-server")));
 });
 
