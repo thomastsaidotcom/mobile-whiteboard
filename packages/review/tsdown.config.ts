@@ -34,6 +34,8 @@ const desktopHostPath = resolve(
 
 export default defineConfig({
   entry: {
+    "portable-html/index": "src/portable-html/index.ts",
+    "portable-html/cli": "src/portable-html/cli.ts",
     "sharing/index": "src/sharing/index.ts",
     cli: "src/cli.ts",
     runtime: "src/runtime.ts",
@@ -85,7 +87,11 @@ export default defineConfig({
       }) + "\n",
     );
     await Promise.all(
-      [cliPath, desktopHostPath].map(async (executablePath) => {
+      [
+        cliPath,
+        desktopHostPath,
+        resolve(packageRoot, "dist/portable-html/cli.js"),
+      ].map(async (executablePath) => {
         await normalizeExecutable(executablePath);
         await chmod(executablePath, 0o755);
       }),

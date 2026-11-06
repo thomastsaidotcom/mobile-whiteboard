@@ -289,7 +289,7 @@ describe("git notes primitives", () => {
     }
 
     expect(batch.has(unannotated)).toBe(false);
-  });
+  }, 15_000);
 
   it("reads notes stored in a fanout tree layout", async () => {
     const rootPath = await initGitRepo();

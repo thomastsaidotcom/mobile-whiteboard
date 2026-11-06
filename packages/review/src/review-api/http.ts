@@ -990,7 +990,9 @@ export function createReviewApi(
         queryAnchor(input),
       );
 
-      return context.json(await data.changes(pins));
+      return context.json(
+        await data.changes(pins, input.file, input.previousPath),
+      );
     });
     app.get("/:id/commits", async (context) => {
       const input = readQuerySchemas.commits.parse(context.req.query());

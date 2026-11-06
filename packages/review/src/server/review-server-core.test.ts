@@ -198,6 +198,8 @@ describe.each(["desktop", "headless"] as const)("the %s server", (kind) => {
     const server = await start();
     const headers = { "x-review-token": server.token };
     const abort = new AbortController();
+    // Retain live streams so garbage collection cannot lower the client count.
+    const clients: Response[] = [];
 
     try {
       for (let index = 0; index < limit; index++) {
@@ -206,6 +208,7 @@ describe.each(["desktop", "headless"] as const)("the %s server", (kind) => {
           signal: abort.signal,
         });
 
+        clients.push(attached);
         expect(attached.status).toBe(200);
       }
 
@@ -226,7 +229,9 @@ describe.each(["desktop", "headless"] as const)("the %s server", (kind) => {
       ).toBeFalsy();
       await once(raw.resume(), "end");
     } finally {
-      abort.abort();
+      await Promise.all(clients.map((client) => client.body?.cancel())).finally(
+        () => abort.abort(),
+      );
     }
   });
 
